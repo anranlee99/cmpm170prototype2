@@ -1,15 +1,12 @@
 import "crisp-game-lib";
 
 const title = "";
-
 const description = `
 `;
-
 const characters: any = [];
 
-/*
-  actually uses crisp game lib to draw the blocks
-*/
+let score = 0;
+
 function renderBlocks(): void {
   for (const block of blocks) {
     box(block.centerX, block.centerY, block.width, block.height);
@@ -17,14 +14,12 @@ function renderBlocks(): void {
   }
 }
 
-/*
-  shifts all blocks down
-*/
 function shiftBoard(): void {
   for (const block of blocks) {
     block.shiftBlockDown();
   }
 }
+
 const blocks: BlockConfig[] = [];
 class BlockConfig {
   centerX: number = 0;
@@ -56,9 +51,11 @@ function addBlock(x: number, y?: number, width?: number, height?: number) {
   const lastPiece = blocks[blocks.length - 1];
   if (!width) width = 15;
   if (!height) height = 5;
-  if (!y) y = lastPiece?.topY - height/2;  
+  if (!y) y = lastPiece ? lastPiece.centerY - lastPiece.height / 2 - height / 2 : 100;
   blocks.push(new BlockConfig(x, y, width, height));
+  score += 1; // Increment score for each block added
 }
+
 const player = {
   x: 50,
   y: 50,
@@ -83,9 +80,14 @@ const player = {
 };
 
 addBlock(50, 100, 40, 10);
+
 function update() {
   renderBlocks();
   player.draw();
+
+  // Display the score using the text function from crisp-game-lib
+  text(`Score: ${score}`, 3, 10);
+
   if(input.isJustPressed){
     if(blocks.length > 3){
       shiftBoard();

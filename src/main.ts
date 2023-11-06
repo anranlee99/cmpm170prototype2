@@ -63,7 +63,10 @@ function addBlock(x: number, y?: number, width?: number, height?: number) {
 
 function checkMove(currentX: number){
   const lastPiece = blocks[blocks.length - 1];
-  if(lastPiece.leftX <= currentX  && currentX <= lastPiece.rightX){
+  let w: number = lastPiece.width;
+  console.log("Player's coords", currentX + w / 2, " ", currentX - w / 2);
+  console.log("Current's block: ", lastPiece.leftX, " ", lastPiece.rightX);
+  if(currentX + w / 2 > lastPiece.leftX && currentX - w / 2 < lastPiece.rightX){
     return true;
   }
   return false;

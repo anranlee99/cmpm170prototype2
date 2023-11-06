@@ -46,9 +46,9 @@ class BlockConfig {
     this.bottomY = centerY + height / 2;
   }
   shiftBlockDown(): void {
-    this.centerY += this.height / 2;
-    this.topY += this.height / 2;
-    this.bottomY += this.height / 2;
+    this.centerY += this.height;
+    this.topY += this.height;
+    this.bottomY += this.height;
   }
 }
 

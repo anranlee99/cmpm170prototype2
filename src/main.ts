@@ -63,7 +63,7 @@ function addBlock(x: number, y?: number, width?: number, height?: number) {
 
 function checkMove(currentX: number){
   const lastPiece = blocks[blocks.length - 1];
-  if(lastPiece.centerX - lastPiece.width / 2 < currentX  && currentX < lastPiece.centerX + lastPiece.width / 2){
+  if(lastPiece.centerX - lastPiece.width / 2 <= currentX  && currentX <= lastPiece.centerX + lastPiece.width / 2){
     return true;
   }
   return false;

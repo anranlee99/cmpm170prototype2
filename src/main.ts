@@ -7,6 +7,9 @@ const description = `
 
 const characters: any = [];
 
+/*
+  actually uses crisp game lib to draw the blocks
+*/
 function renderBlocks(): void {
   for (const block of blocks) {
     box(block.centerX, block.centerY, block.width, block.height);
@@ -14,9 +17,12 @@ function renderBlocks(): void {
   }
 }
 
+/*
+  shifts all blocks down
+*/
 function shiftBoard(): void {
   for (const block of blocks) {
-    block.centerY += block.height;
+    block.shiftBlockDown();
   }
 }
 const blocks: BlockConfig[] = [];
@@ -39,13 +45,18 @@ class BlockConfig {
     this.topY = centerY - height / 2;
     this.bottomY = centerY + height / 2;
   }
+  shiftBlockDown(): void {
+    this.centerY += this.height / 2;
+    this.topY += this.height / 2;
+    this.bottomY += this.height / 2;
+  }
 }
 
 function addBlock(x: number, y?: number, width?: number, height?: number) {
   const lastPiece = blocks[blocks.length - 1];
   if (!width) width = 15;
   if (!height) height = 5;
-  if (!y) y = lastPiece?.topY - height;  
+  if (!y) y = lastPiece?.topY - height/2;  
   blocks.push(new BlockConfig(x, y, width, height));
 }
 const player = {

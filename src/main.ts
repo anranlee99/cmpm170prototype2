@@ -59,6 +59,15 @@ function addBlock(x: number, y?: number, width?: number, height?: number) {
   if (!y) y = lastPiece?.topY - height/2;  
   blocks.push(new BlockConfig(x, y, width, height));
 }
+
+
+function checkMove(currentX: number){
+  const lastPiece = blocks[blocks.length - 1];
+  if(lastPiece.leftX <= currentX  && currentX <= lastPiece.rightX){
+    return true;
+  }
+  return false;
+}
 const player = {
   x: 50,
   y: 50,
@@ -90,7 +99,10 @@ function update() {
     if(blocks.length > 3){
       shiftBoard();
     }
-    addBlock(player.x);
+    if(checkMove(player.x)) addBlock(player.x);
+    else{
+      end("Game Over");
+    }
   }
   if (!ticks) {
   }

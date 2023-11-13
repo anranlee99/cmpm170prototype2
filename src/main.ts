@@ -25,7 +25,7 @@ function shiftBoard(): void {
     block.shiftBlockDown();
   }
 }
-const blocks: BlockConfig[] = [];
+let blocks: BlockConfig[] = [];
 class BlockConfig {
   centerX: number = 0;
   centerY: number = 0;
@@ -102,6 +102,9 @@ function update() {
     if(checkMove(player.x)) addBlock(player.x);
     else{
       end("Game Over");
+      blocks = [];
+      addBlock(50, 100, 40, 10);
+
     }
   }
   if (!ticks) {

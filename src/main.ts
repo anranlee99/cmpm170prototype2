@@ -3,31 +3,24 @@ import "crisp-game-lib";
 const title = "Block Stacking Game";
 const description = `Stack blocks and avoid obstacles.`;
 
-const characters = [];
+const characters: any[] = [];
 
 class Obstacle {
   constructor(public x: number, public y: number, public size: number) {}
 
   draw() {
+    color("green");
     box(this.x, this.y, this.size, this.size);
+    color("black");
   }
 
   shiftDown(shiftAmount: number) {
     this.y += shiftAmount;
   }
-
-  collidesWithBlock(block) {
-    return (
-      this.x < block.centerX + block.width / 2 &&
-      this.x + this.size > block.centerX - block.width / 2 &&
-      this.y < block.centerY + block.height / 2 &&
-      this.y + this.size > block.centerY - block.height / 2
-    );
-  }
 }
 
-let blocks = [];
-let obstacles = []; // Array to hold obstacles
+let blocks: BlockConfig[] = [];
+let obstacles: Obstacle[] = []; // Array to hold obstacles
 let obstacleSpacing = 50; // Minimum spacing between obstacles
 
 class BlockConfig {
@@ -60,6 +53,7 @@ class BlockConfig {
 
 function renderBlocks() {
   for (const block of blocks) {
+    color("black");
     box(block.centerX, block.centerY, block.width, block.height);
   }
 }
@@ -84,7 +78,7 @@ function addBlock(x: number, y?: number, width?: number, height?: number) {
 
 function checkMove(currentX: number) {
   const lastPiece = blocks[blocks.length - 1];
-  return lastPiece && lastPiece.leftX <= currentX && currentX <= lastPiece.rightX;
+  return lastPiece.leftX <= currentX && currentX <= lastPiece.rightX;
 }
 
 const player = {
@@ -104,6 +98,7 @@ const player = {
   },
   draw() {
     this.x = this.getX();
+    color("black");
     box(this.x, this.y, this.width, this.height);
   },
 };
@@ -114,12 +109,9 @@ function generateObstacle() {
 }
 
 function checkCollisionsWithObstacles() {
-  for (const obstacle of obstacles) {
-    for (const block of blocks) {
-      if (obstacle.collidesWithBlock(block)) {
-        return true;
-      }
-    }
+  for(const block of blocks){
+    if(box(block.centerX, block.centerY, block.width, block.height).isColliding.rect?.green)
+      return true;
   }
   return false;
 }
@@ -138,19 +130,14 @@ function generateObstacleIfNeeded() {
 }
 
 function checkImmediateCollision(x: number) {
-  let tempBlock = new BlockConfig(x, player.y, player.width, player.height);
-  for (const obstacle of obstacles) {
-    if (obstacle.collidesWithBlock(tempBlock)) {
-      return true;
-    }
-  }
+  if(box(x, player.y, player.width, player.height).isColliding.rect?.green)
+    return true;
   return false;
 }
 
 function update() {
   renderBlocks();
   player.draw();
-
   for (const obstacle of obstacles) {
     obstacle.draw();
   }
@@ -169,6 +156,7 @@ function update() {
 
     if (checkMove(player.x) && !checkImmediateCollision(player.x)) {
       addBlock(player.x);
+      addScore(1, vec(player.x, player.y));
     } else {
       end("Game Over");
       resetGame();
@@ -183,3 +171,4 @@ init({
   characters,
   options: {},
 });
+resetGame();

@@ -78,7 +78,16 @@ function addBlock(x: number, y?: number, width?: number, height?: number) {
 
 function checkMove(currentX: number) {
   const lastPiece = blocks[blocks.length - 1];
-  return lastPiece.leftX <= currentX && currentX <= lastPiece.rightX;
+  const leftCur = currentX - 7.5;
+  const rightCur = currentX + 7.5;
+
+  //console.log(currentX, " ", lastPiece.leftX, " ", lastPiece.rightX);
+  //return lastPiece && lastPiece.leftX <= currentX && currentX <= lastPiece.rightX;
+  return (
+    lastPiece &&
+    ((lastPiece.leftX <= leftCur && leftCur <= lastPiece.rightX) ||
+      (lastPiece.leftX <= rightCur && rightCur <= lastPiece.rightX))
+  );
 }
 
 const player = {
@@ -143,6 +152,7 @@ function update() {
   }
 
   if (checkCollisionsWithObstacles()) {
+    console.log("AHHHHHH");
     end("Game Over");
     resetGame();
     return;
@@ -158,6 +168,8 @@ function update() {
       addBlock(player.x);
       addScore(1, vec(player.x, player.y));
     } else {
+      console.log("Move: ", checkMove(player.x));
+      console.log("Collision: ", checkImmediateCollision(player.x));
       end("Game Over");
       resetGame();
     }

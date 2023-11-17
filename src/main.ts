@@ -118,14 +118,12 @@ function generateObstacle() {
 }
 
 function checkCollisionsWithObstacles() {
-  for(const block of blocks){
-    if(box(block.centerX, block.centerY, block.width, block.height).isColliding.rect?.green)
-      return true;
-  }
-  return false;
+  const lastPiece = blocks[blocks.length - 1];
+  return box(lastPiece.centerX, lastPiece.centerY, lastPiece.width, lastPiece.height).isColliding.rect?.green;
 }
-
+let gameover = false;
 function resetGame() {
+  gameover = false;
   blocks = [];
   obstacles = [];
   addBlock(50, 100, 40, 10);
@@ -138,12 +136,6 @@ function generateObstacleIfNeeded() {
   }
 }
 
-function checkImmediateCollision(x: number) {
-  if(box(x, player.y, player.width, player.height).isColliding.rect?.green)
-    return true;
-  return false;
-}
-
 function update() {
   renderBlocks();
   player.draw();
@@ -151,28 +143,26 @@ function update() {
     obstacle.draw();
   }
 
-  if (checkCollisionsWithObstacles()) {
-    console.log("AHHHHHH");
-    end("Game Over");
-    resetGame();
-    return;
-  }
-
   if (input.isJustPressed) {
+    if(gameover){
+      resetGame();
+    }
     if (blocks.length > 3) {
       shiftBoard();
       generateObstacleIfNeeded();
     }
 
-    if (checkMove(player.x) && !checkImmediateCollision(player.x)) {
+    if (checkMove(player.x)) {
       addBlock(player.x);
       addScore(1, vec(player.x, player.y));
     } else {
-      console.log("Move: ", checkMove(player.x));
-      console.log("Collision: ", checkImmediateCollision(player.x));
       end("Game Over");
-      resetGame();
+      gameover = true;
     }
+  }
+  if (checkCollisionsWithObstacles()) {
+    end("Game Over");
+    gameover = true;
   }
 }
 

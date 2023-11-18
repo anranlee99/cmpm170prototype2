@@ -1,7 +1,10 @@
 import "crisp-game-lib";
 
-const title = "Block Stacking Game";
-const description = `Stack blocks and avoid obstacles.`;
+const title = "  Block Stacker";
+const description = `
+   Stack blocks 
+        and 
+  avoid obstacles.`;
 
 const characters: any[] = [];
 
